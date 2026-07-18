@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nginx
 spec:
-  replicas: # TODO: set an initial replica count, e.g. 3
+  replicas: 5
   selector:
     matchLabels:
       app: nginx
@@ -16,6 +16,13 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: # TODO: set the image, e.g. nginx:1.27-alpine
+          image: nginx:1.27-alpine
           ports:
             - containerPort: 80
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"

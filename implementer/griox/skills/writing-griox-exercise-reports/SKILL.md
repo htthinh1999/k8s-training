@@ -7,7 +7,7 @@ description: Use when writing or updating Vietnamese exercise reports under impl
 
 ## Overview
 
-Write the report from repo evidence, not memory. The workflow is: detect changed screenshot folders from `git diff`, map each folder number to the source lab in `basic/`, assign screenshots to lab steps, then write a polished Vietnamese `README.md` in the style of `implementer/griox/basic/01/README.md`.
+Write the report from repo evidence, not memory. The workflow is: detect changed screenshot folders from `git diff` and `git status`, map each folder number to the source lab in `basic/`, assign screenshots to lab steps, then write a polished Vietnamese `README.md` in the style of `implementer/griox/basic/01/README.md`.
 
 ## When to Use
 
@@ -20,27 +20,31 @@ Do not use this for code changes unrelated to exercise-report writing.
 ## Required Workflow
 
 1. First command: run `git diff --name-only`.
-2. From that output, isolate only paths matching `implementer/griox/basic/*/screenshots/*`.
-3. If no screenshot path appears in `git diff`, stop. Do not guess the target folder from `ls`, `find`, or existing files.
-4. Group changed screenshots by exercise folder `<NN>`. Process each folder independently.
-5. Map `<NN>` to the source lab by finding `basic/<NN>-*/README.md`.
-6. Read three inputs before drafting:
+2. Second command: run `git status --short`.
+3. Build the active screenshot set from both outputs:
+   - tracked screenshot changes from `git diff --name-only`
+   - untracked or modified screenshot files/folders from `git status --short`
+4. From that combined set, isolate only paths matching `implementer/griox/basic/*/screenshots/*`.
+5. If no screenshot path appears in either `git diff` or `git status`, stop. Do not guess the target folder from `ls`, `find`, or existing files.
+6. Group changed screenshots by exercise folder `<NN>`. Process each folder independently.
+7. Map `<NN>` to the source lab by finding `basic/<NN>-*/README.md`.
+8. Read three inputs before drafting:
    - the source lab README
    - the target report README, if it already exists
    - `implementer/griox/basic/01/README.md` as the style reference
-7. Build a step-to-evidence table with:
+9. Build a step-to-evidence table with:
    - source step
    - expected proof
    - matched screenshot filenames
-8. Match screenshots to steps using this priority:
+10. Match screenshots to steps using this priority:
    - visible terminal/browser content inside the image
    - filename keywords
    - source README step order
-9. If a screenshot is ambiguous, place it by the most specific Kubernetes artifact visible. Use filename only as supporting evidence.
-10. If a required step has no proof, do not invent certainty. Either keep the prose factual and limited, or call out that the screenshot set does not show that step clearly.
-11. Write or update `implementer/griox/basic/<NN>/README.md`.
+11. If a screenshot is ambiguous, place it by the most specific Kubernetes artifact visible. Use filename only as supporting evidence.
+12. If a required step has no proof, do not invent certainty. Either keep the prose factual and limited, or call out that the screenshot set does not show that step clearly.
+13. Write or update `implementer/griox/basic/<NN>/README.md`.
 
-Never skip step 1. `git status`, `ls`, and `find` may help later, but they are not allowed to choose the target folder. Only `git diff --name-only` decides which screenshot folders are active.
+Never skip steps 1 and 2. The active screenshot folders are decided by the union of `git diff --name-only` and `git status --short`. `ls` and `find` may help later, but they are not allowed to choose the target folder by themselves.
 
 ## Report Contract
 
@@ -65,7 +69,7 @@ When the lab has a bonus section, keep it as a separate final section.
 
 ## Verification Checklist
 
-- [ ] The workflow started from `git diff --name-only`, not from a guessed folder
+- [ ] The workflow started from `git diff --name-only` and `git status --short`, not from a guessed folder
 - [ ] Every changed screenshot under the target folder is used or intentionally excluded with a reason
 - [ ] Section order matches `basic/<NN>-*/README.md`
 - [ ] Screenshot paths are relative and valid
@@ -77,15 +81,17 @@ When the lab has a bonus section, keep it as a separate final section.
 | Mistake | Fix |
 |---|---|
 | Drafting from filenames only | Read the source README and inspect the screenshot meaning first |
-| Jumping straight into a guessed folder | Prove the target folder first with `git diff --name-only` |
+| Ignoring untracked screenshot files | Read `git status --short` in addition to `git diff --name-only` |
+| Jumping straight into a guessed folder | Prove the target folder first with `git diff --name-only` and `git status --short` |
 | Writing sections in screenshot order | Reorder sections to match the lab flow |
 | Rewriting commands into a different environment | Describe commands the way the screenshots actually prove them |
 | Mixing `mình` and `em` | Use `em` consistently |
 
 ## Red Flags
 
-- Starting with `git status` instead of `git diff --name-only`
+- Starting from folder guessing instead of repo change signals
+- Reading only `git diff` and forgetting untracked screenshot files in `git status`
 - Choosing the exercise folder because it already exists
 - Inferring the target from `ls`, `find`, or README links before checking the diff
 
-If any red flag appears, restart the workflow from `git diff --name-only`.
+If any red flag appears, restart the workflow from `git diff --name-only` and `git status --short`.
