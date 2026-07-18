@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  APP_COLOR: # TODO: any string, e.g. blue
+  APP_MESSAGE: # TODO: any string, e.g. "hello from a configmap"
+  app.conf: |
+    # this whole block becomes a file named app.conf when mounted as a volume
+    log_level=info
+    feature_flag_x=enabled

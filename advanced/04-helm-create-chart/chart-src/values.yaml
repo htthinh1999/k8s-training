@@ -1,0 +1,22 @@
+# Drop this in place of the default mychart/values.yaml
+
+replicaCount: # TODO: e.g. 2
+
+image:
+  repository: # TODO: e.g. nginx
+  tag: # TODO: e.g. "1.27-alpine"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: # TODO: e.g. 80
+
+message: # TODO: any string, e.g. "hello from my first chart"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 32Mi
+  limits:
+    cpu: 200m
+    memory: 64Mi

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-headless
+spec:
+  clusterIP: None   # headless: no load-balancing, DNS resolves directly to Pod IPs
+  selector:
+    app: web
+  ports:
+    - name: http
+      port: 80

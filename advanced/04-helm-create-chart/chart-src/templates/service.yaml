@@ -1,0 +1,15 @@
+{{/* Drop this in place of the default mychart/templates/service.yaml */}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "mychart.fullname" . }}
+  labels:
+    {{- include "mychart.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: # TODO: same as .Values.service.port
+      protocol: TCP
+  selector:
+    {{- include "mychart.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  labels:
+    app: # TODO: set a label value, e.g. nginx
+spec:
+  containers:
+    - name: nginx
+      image: # TODO: set the image, e.g. nginx:1.27-alpine
+      ports:
+        - containerPort: 80
