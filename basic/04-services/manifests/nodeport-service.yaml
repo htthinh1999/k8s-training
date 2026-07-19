@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: whoami-nodeport
 spec:
-  type: # TODO: set the Service type, e.g. NodePort
+  type: NodePort
   selector:
     app: whoami
   ports:

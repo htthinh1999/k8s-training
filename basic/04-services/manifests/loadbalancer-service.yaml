@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: whoami-loadbalancer
 spec:
-  type: # TODO: set the Service type, e.g. LoadBalancer
+  type:  LoadBalancer
   selector:
     app: whoami
   ports:

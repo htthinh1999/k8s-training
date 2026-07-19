@@ -5,7 +5,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: # TODO: match the Deployment's Pod label, e.g. whoami
+    app:  whoami
   ports:
-    - port: # TODO: port exposed by the Service, e.g. 80
+    - port: 80
       targetPort: 80
