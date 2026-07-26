@@ -69,7 +69,7 @@ ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl describe deployment nginx
 
 Ảnh bằng chứng:
 
-![Inspect Nginx Deployment](screenshots/inspect nginx-deployment.png)
+![Inspect Nginx Deployment](screenshots/inspect-nginx-deployment.png)
 
 ## 6. Cập nhật số lượng replicas
 
@@ -85,7 +85,7 @@ ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get pods -n basic-02-depl
 
 Ảnh bằng chứng:
 
-![Update Deployment Replicas](screenshots/update deploymet replicas.png)
+![Update Deployment Replicas](screenshots/update-deploymet-replicas.png)
 
 ## 7. Xóa Pod và quan sát cơ chế self-healing
 
@@ -136,7 +136,7 @@ ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl delete namespace basic-02
 
 Ảnh bằng chứng:
 
-![Bonus Challenge Config YAML](screenshots/bonus challenge config yaml.png)
+![Bonus Challenge Config YAML](screenshots/bonus-challenge-config-yaml.png)
 
 ## 11. Bonus Challenge - Kiểm tra Allocated Resources trên node
 
@@ -150,7 +150,7 @@ ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl describe node"
 
 Ảnh bằng chứng:
 
-![Describe Node Allocated Resources](screenshots/describe node allocated resources.png)
+![Describe Node Allocated Resources](screenshots/describe-node-allocated-resources.png)
 
 ## Tổng kết
 

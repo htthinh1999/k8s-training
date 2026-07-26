@@ -4,7 +4,7 @@ metadata:
   name: web
 spec:
   serviceName: web-headless   # must match the headless Service above
-  replicas: # TODO: set a replica count, e.g. 2
+  replicas: 3
   selector:
     matchLabels:
       app: web
@@ -29,7 +29,7 @@ spec:
         name: www
       spec:
         accessModes: ["ReadWriteOnce"]
-        storageClassName: # TODO: set the storage class, e.g. microk8s-hostpath
+        storageClassName:  microk8s-hostpath
         resources:
           requests:
             storage: 1Gi
