@@ -54,8 +54,8 @@ The report must:
 - Start with a short intro linking back to the source lab README
 - Follow the source lab order, not screenshot filename order
 - Use numbered sections for the main flow
-- Put `Lệnh sử dụng:` only where the command is central
 - Put `Ảnh bằng chứng:` immediately before the relevant screenshot links
+- Omit `Lệnh sử dụng:` blocks unless explicitly required
 - End with `Tổng kết`
 
 When the lab has a bonus section, keep it as a separate final section.

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-demo
+  template:
+    metadata:
+      labels:
+        app: config-demo
+    spec:
+      containers:
+        - name: demo
+          image: busybox:1.36
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "--- env vars from configmap/secret ---";
+              echo "APP_COLOR=$APP_COLOR";
+              echo "APP_MESSAGE=$APP_MESSAGE";
+              echo "DB_PASSWORD=$DB_PASSWORD";
+              echo "--- mounted configmap file ---";
+              cat /etc/config/app.conf;
+              echo "--- mounted secret file ---";
+              cat /etc/secret/DB_PASSWORD;
+              echo "--- sleeping ---";
+              sleep 3600
+          envFrom:
+            - configMapRef:
+                name: app-config
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DB_PASSWORD
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: secret-volume
+              mountPath: /etc/secret
+      volumes:
+        - name: config-volume
+          configMap:
+            name: app-config
+        - name: secret-volume
+          secret:
+            secretName: app-secret
+            

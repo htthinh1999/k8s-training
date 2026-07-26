@@ -4,15 +4,7 @@ Tài liệu này ghi lại quá trình thực hiện bài [basic/04-services/REA
 
 ## 1. Cấu hình MetalLB (Prerequisites)
 
-Trước khi triển khai Service kiểu `LoadBalancer`, em kiểm tra và cấu hình addon `metallb` trên MicroK8s. Các lệnh bên dưới giúp xác nhận trạng thái các Pod trong namespace `metallb-system`, thông tin tài nguyên `ipaddresspool`, cũng như thực hiện kích hoạt lại MetalLB với dải IP quy định.
-
-Lệnh sử dụng:
-
-```bash
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get pods -n metallb-system"
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get ipaddresspool -n metallb-system"
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s enable metallb:100.90.205.51-100.90.205.51"
-```
+Trước khi triển khai Service kiểu `LoadBalancer`, em kiểm tra và cấu hình addon `metallb` trên MicroK8s. Các thao tác giúp xác nhận trạng thái các Pod trong namespace `metallb-system`, thông tin tài nguyên `ipaddresspool`, cũng như thực hiện kích hoạt lại MetalLB với dải IP quy định.
 
 Ảnh bằng chứng:
 
@@ -23,14 +15,6 @@ ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s enable metallb:100.90.205.51-100.
 
 Theo flow bài lab, bước đầu tiên là tạo namespace `basic-04-services` và triển khai ứng dụng `whoami` bằng Deployment với 3 replicas.
 
-Lệnh sử dụng:
-
-```bash
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl create namespace basic-04-services"
-cat basic/04-services/manifests/deployment.yaml | ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl apply -f - -n basic-04-services"
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get pods -n basic-04-services -o wide"
-```
-
 Ảnh bằng chứng:
 
 ![Create Namespace](screenshots/create-namespace.png)
@@ -40,13 +24,6 @@ ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get pods -n basic-04-serv
 
 Em hoàn thiện thông tin selector và port trong `clusterip-service.yaml` rồi apply để tạo Service kiểu `ClusterIP`. Đây là loại Service mặc định, cho phép giao tiếp nội bộ giữa các tài nguyên trong cluster.
 
-Lệnh sử dụng:
-
-```bash
-cat basic/04-services/manifests/clusterip-service.yaml | ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl apply -f - -n basic-04-services"
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get svc -n basic-04-services"
-```
-
 Ảnh bằng chứng:
 
 ![Apply ClusterIP Get Service](screenshots/appy-clusterip-get-service.png)
@@ -54,12 +31,6 @@ ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get svc -n basic-04-servi
 ## 4. Kiểm tra service discovery và load balancing nội bộ
 
 Sau khi Service `ClusterIP` sẵn sàng, em tạo một Pod tạm `curler` trong cùng namespace để thực hiện nhiều lệnh request liên tục tới `whoami-clusterip`. Phản hồi trả về các `Hostname:` khác nhau từ 3 Pod backend, chứng minh cơ chế tự động cân bằng tải (load balancing) nội bộ.
-
-Lệnh sử dụng:
-
-```bash
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl run curler -n basic-04-services --image=busybox:1.36 --restart=Never -it --rm -- sh -c 'for i in 1 2 3 4 5; do wget -qO- whoami-clusterip; echo; done'"
-```
 
 Ảnh bằng chứng:
 
@@ -69,13 +40,6 @@ ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl run curler -n basic-04-se
 
 Tiếp theo, em cấu hình file `nodeport-service.yaml` để tạo Service loại `NodePort`. Sau khi apply, Service `whoami-nodeport` mở thêm một cổng cố định trên node (ví dụ `30080`) để phục vụ truy cập từ bên ngoài.
 
-Lệnh sử dụng:
-
-```bash
-cat basic/04-services/manifests/nodeport-service.yaml | ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl apply -f - -n basic-04-services"
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get svc whoami-nodeport -n basic-04-services"
-```
-
 Ảnh bằng chứng:
 
 ![Create NodePort Get Svc](screenshots/create-nodeport-get-svc.png)
@@ -84,12 +48,6 @@ ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get svc whoami-nodeport -
 
 Em lấy địa chỉ `InternalIP` của node (`NODE_IP`) và gửi request thông qua `curl http://$NODE_IP:30080`. Kết quả phản hồi thay đổi `Hostname:` giữa các Pod backend qua mỗi lần gọi, xác nhận ứng dụng đã truy cập thành công từ ngoài cluster.
 
-Lệnh sử dụng:
-
-```bash
-ssh huydeptrai@nuc.tail66abd2.ts.net "NODE_IP=\$(microk8s kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type==\"InternalIP\")].address}'); curl \"http://\$NODE_IP:30080\""
-```
-
 Ảnh bằng chứng:
 
 ![Reach Cluster From Outside](screenshots/reach-cluster-from-outside.png)
@@ -97,13 +55,6 @@ ssh huydeptrai@nuc.tail66abd2.ts.net "NODE_IP=\$(microk8s kubectl get nodes -o j
 ## 7. Tạo LoadBalancer Service (MetalLB)
 
 Cuối cùng, em cấu hình file `loadbalancer-service.yaml` với `type: LoadBalancer` và apply vào cluster. Nhờ MetalLB đang hoạt động, Service `whoami-loadbalancer` nhận ngay một địa chỉ `EXTERNAL-IP` thực tế thay vì giữ trạng thái `<pending>`.
-
-Lệnh sử dụng:
-
-```bash
-cat basic/04-services/manifests/loadbalancer-service.yaml | ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl apply -f - -n basic-04-services"
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get svc whoami-loadbalancer -n basic-04-services -w"
-```
 
 Ảnh bằng chứng:
 
@@ -114,14 +65,6 @@ ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get svc whoami-loadbalanc
 Ở phần bonus challenge, em kiểm tra tài nguyên `endpoints` của Service `whoami-clusterip` và đối chiếu với IP thực tế của các Pod:
 - **Trước khi xóa Pod**: Danh sách IP backend trong `endpoints` hoàn toàn khớp với danh sách IP của 3 Pod `whoami`.
 - **Sau khi xóa Pod**: Khi xóa 1 Pod bất kỳ, Kubernetes lập tức cập nhật `endpoints`, xóa IP của Pod cũ và tự động thêm IP của Pod mới được ReplicaSet tạo lại.
-
-Lệnh sử dụng:
-
-```bash
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get endpoints whoami-clusterip -n basic-04-services -o yaml"
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl get pods -n basic-04-services -o wide"
-ssh huydeptrai@nuc.tail66abd2.ts.net "microk8s kubectl delete pod whoami-56759f85b8-2kqzt -n basic-04-services"
-```
 
 Ảnh bằng chứng:
 
