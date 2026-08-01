@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scaling-demo
+  labels:
+    app: scaling-demo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: scaling-demo
+  template:
+    metadata:
+      labels:
+        app: scaling-demo
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          resources:              # required for the HPA bonus: it needs a CPU request to compute % utilization
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 200m
+              memory: 64Mi
