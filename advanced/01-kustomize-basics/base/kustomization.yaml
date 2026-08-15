@@ -2,14 +2,19 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - # TODO: list the manifest files kustomize should manage, e.g. deployment.yaml and service.yaml
+  - deployment.yaml
+  - service.yaml
 
-namePrefix: # TODO: a prefix applied to every resource name, e.g. kz-
+namePrefix: kz-
 
 commonLabels:
-  managed-by: # TODO: any label value, e.g. kustomize
+  managed-by: kustomize
 
 configMapGenerator:
   - name: nginx-config
     literals:
-      - GREETING= # TODO: any string, e.g. "hello from kustomize"
+      - GREETING=  "xin chào anh huy devop tương lai"
+
+images:
+  - name: nginx
+    newTag: 1.21.6-alpine

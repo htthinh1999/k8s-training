@@ -53,7 +53,7 @@ Edit the `GREETING` literal in `base/kustomization.yaml`, then:
 
 ```bash
 kubectl kustomize base/ | grep nginx-config   # note the hash suffix changed
-kubectl apply -k base/ -n adv-01-kustomize-basics
+kubectl apply -k base/ -n adv-01-kustomize-basicsku
 kubectl get pods -n adv-01-kustomize-basics -w
 ```
 
