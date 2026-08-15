@@ -17,6 +17,6 @@ configMapGenerator:
     literals:
       - GREETING=xin chao anh huy devop tuong lai
 
-images:
+imagesn :
   - name: nginx
     newTag: 1.21.6-alpine
