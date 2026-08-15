@@ -1,0 +1,16 @@
+# Values file for the podinfo chart (https://github.com/stefanprodan/podinfo)
+# Fill in the TODOs, then: helm install frontend podinfo/podinfo -f values/dev-values.yaml -n <namespace>
+
+replicaCount:  2
+
+ui:
+  message: "hello from griox ngo super senior devop kubernetes "
+  color: "#34577c"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
