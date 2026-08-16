@@ -1,6 +1,6 @@
 # Drop this in place of the default mychart/values.yaml
 
-replicaCount:  2
+replicaCount:  4
 
 image:
   repository:  nginx
@@ -11,7 +11,7 @@ service:
   type: ClusterIP
   port: 80
 
-message:  "hello from griox first chart"
+message:  "hello from registry version 3"
 
 resources:
   requests:
