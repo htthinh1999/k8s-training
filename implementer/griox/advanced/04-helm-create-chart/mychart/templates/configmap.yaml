@@ -1,0 +1,7 @@
+{{/* New template — helm create doesn't scaffold this one, add it yourself */}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mychart.fullname" . }}-config
+data:
+  MESSAGE: {{ .Values.message | quote }}

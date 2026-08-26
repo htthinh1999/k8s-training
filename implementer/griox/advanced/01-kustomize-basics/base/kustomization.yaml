@@ -7,14 +7,16 @@ resources:
 
 namePrefix: kz-
 
-commonLabels:
-  managed-by: kustomize
+labels:
+  - pairs:
+      managed-by: kustomize
+    includeSelectors: true
 
 configMapGenerator:
   - name: nginx-config
     literals:
-      - GREETING=  "xin chào anh huy devop tương lai"
+      - GREETING=xin chao anh huy devop tuong lai
 
-images:
+imagesn :
   - name: nginx
     newTag: 1.21.6-alpine
